@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: podcast-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - .:/var/www
+        ports:
+            - "9000:9000"
+        depends_on:
+            - mysql
+
+    mysql:
+        image: mysql:8.0
+        container_name: podcast-mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: podcast_db
+        ports:
+            - "3306:3306"
+        volumes:
+            - dbdata:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: podcast-phpmyadmin
+        restart: always
+        ports:
+            - "8080:80"
+        environment:
+            PMA_HOST: mysql
+            MYSQL_ROOT_PASSWORD: secret
+            PMA_ABSOLUTE_URI: http://localhost:8080/
+            COOKIE_SECURE: false
+        depends_on:
+            - mysql
+
+    nginx:
+        image: nginx:alpine
+        container_name: podcast-nginx
+        restart: unless-stopped
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www
+            - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+
+volumes:
+    dbdata:
