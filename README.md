@@ -24,8 +24,8 @@ A scalable Laravel API backend for a podcast platform. Built with clean architec
 ### Setup
 
 ```bash
-git clone <your-repo-url>
-cd podcast-api
+git clone https://github.com/ayodvr/Podcast-Platform-API.git
+cd Podcast-Platform-API
 
 cp .env.example .env
 docker-compose up -d --build
@@ -34,3 +34,9 @@ composer install
 php artisan key:generate
 php artisan migrate --seed
 ```
+
+# API DOCUMENTATION
+
+# SWAGGER
+
+http://localhost:9000/api/documentation

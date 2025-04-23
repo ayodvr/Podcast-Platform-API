@@ -25,7 +25,10 @@ use App\Http\Controllers\Api\EpisodeController;
 Route::prefix('v1')->group(function () {
     Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
     Route::apiResource('podcasts', PodcastController::class)->only(['index', 'show']);
+    Route::apiResource('episodes', EpisodeController::class)->only(['index', 'show']);
+    Route::post('categories', [CategoryController::class, 'store']);
+    Route::post('podcasts', [PodcastController::class, 'store']);
+    Route::post('podcasts/{podcast}/episodes', [EpisodeController::class, 'store']);
     Route::get('podcasts/{podcast}/episodes', [EpisodeController::class, 'byPodcast']);
     Route::get('episodes/{episode}', [EpisodeController::class, 'show']);
 });
-

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Podcast;
 use App\Http\Resources\PodcastResource;
+use App\Http\Requests\PodcastStoreRequest;
 
 class PodcastController extends Controller
 {
@@ -43,6 +44,31 @@ class PodcastController extends Controller
 
         $podcasts = $query->paginate(10);
         return PodcastResource::collection($podcasts);
+    }
+
+    /**
+ * @OA\Post(
+ *     path="/api/podcasts",
+ *     tags={"Podcasts"},
+ *     summary="Create a new podcast",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"title", "category_id"},
+ *             @OA\Property(property="title", type="string", example="Tech Talks"),
+ *             @OA\Property(property="description", type="string", example="Daily tech updates"),
+ *             @OA\Property(property="image", type="string", example="http://example.com/image.png"),
+ *             @OA\Property(property="category_id", type="integer", example=1)
+ *         )
+ *     ),
+ *     @OA\Response(response=201, description="Created"),
+ *     @OA\Response(response=422, description="Validation error")
+ * )
+ */
+    public function store(PodcastStoreRequest $request)
+    {
+        $podcast = Podcast::create($request->validated());
+        return response()->json($podcast, 201);
     }
 
     public function show(Podcast $podcast)
